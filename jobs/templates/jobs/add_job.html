@@ -1,0 +1,49 @@
+{% extends 'jobs/base.html' %} 
+
+{% load widget_tweaks %} 
+
+{% block content %}
+
+<div class="w-full bg-red-300 min-h-screen">
+  <div class="flex justify-center py-8">
+    <div class="w-full md:w-3/5 bg-green-300 p-6 rounded-lg shadow-lg">
+      <h1 class="font-bold text-4xl text-center mb-6">Add new Job</h1>
+
+      <div class="bg-gray-200 p-4 rounded-md shadow-md">
+        <form method="POST" class="space-y-6">
+          {% csrf_token %}
+
+          <!-- Job Name -->
+          <div>
+            <label
+              for="id_name"
+              class="block text-sm font-medium text-gray-700"
+            >
+              {{ job_form.name.label_tag }}
+            </label>
+            <div class="mt-1">
+              {{ job_form.name|add_class:"w-full p-2 border border-gray-300
+              rounded-md shadow-sm focus:ring-indigo-500
+              focus:border-indigo-500" }}
+            </div>
+            {% if job_form.name.errors %}
+            <p class="mt-2 text-sm text-red-600">{{ job_form.name.errors }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4">
+            <button
+              type="submit"
+              class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Save Job
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
