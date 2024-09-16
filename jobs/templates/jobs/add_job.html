@@ -1,8 +1,4 @@
-{% extends 'jobs/base.html' %} 
-
-{% load widget_tweaks %} 
-
-{% block content %}
+{% extends 'jobs/base.html' %} {% block content %} {% load widget_tweaks %}
 
 <div class="w-full bg-red-300 min-h-screen">
   <div class="flex justify-center py-8">
@@ -19,15 +15,105 @@
               for="id_name"
               class="block text-sm font-medium text-gray-700"
             >
-              {{ job_form.name.label_tag }}
+              Job Name
+            </label>
+            <input
+              type="text"
+              name="{{ job_form.name.name }}"
+              id="{{ job_form.name.id_for_label }}"
+              class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            {% if job_form.name.errors %}
+            <p class="mt-2 text-sm text-red-700 font-red-700">
+              {{ job_form.name.errors }}
+            </p>
+            {% endif %}
+          </div>
+
+          <!-- Job Description -->
+          <div>
+            <label
+              for="id_description"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Job Description
+            </label>
+            <div>
+              <textarea
+                name="{{ job_form.description.name }}"
+                id="{{ job_form.description.id_for_label }}"
+                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              ></textarea>
+
+              {% if job_form.description.errors %}
+              <p class="mt-2 text-sm text-red-700 font-red-700">
+                {{ job_form.description.errors }}
+              </p>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Job Schedule Days -->
+          <div>
+            <label
+              for="id_schedule_days"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Select Schedule Days
+            </label>
+            <div class="mt-2 grid grid-cols-2 gap-2">
+              {% for day in job_form.schedule_days.field.choices %}
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  name="{{ job_form.schedule_days.name }}"
+                  id="id_schedule_day_{{ forloop.counter }}"
+                  value="{{ day.0 }}"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  {%
+                  if
+                  day.0
+                  in
+                  job_form.schedule_days.value
+                  %}checked{%
+                  endif
+                  %}
+                />
+                <label
+                  for="id_schedule_day_{{ forloop.counter }}"
+                  class="ml-2 block text-sm text-gray-900"
+                >
+                  {{ day.1 }}
+                </label>
+              </div>
+              {% endfor %}
+            </div>
+            {% if job_form.schedule_days.errors %}
+            <p class="mt-2 text-sm text-red-600">
+              {{ job_form.schedule_days.errors }}
+            </p>
+            {% endif %}
+          </div>
+
+          <!-- Job Schedule Time -->
+          <div>
+            <label
+              for="id_schedule_time"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Select Schedule Time
             </label>
             <div class="mt-1">
-              {{ job_form.name|add_class:"w-full p-2 border border-gray-300
-              rounded-md shadow-sm focus:ring-indigo-500
-              focus:border-indigo-500" }}
+              <input type="time" name="{{ job_form.schedule_time.name }}" id="{{
+              job_form.schedule_time.id_for_label }}" value="{{
+              job_form.schedule_time.value|default_if_none:"" }}" class="w-full
+              p-2 border border-gray-300 rounded-md shadow-sm
+              focus:ring-indigo-500 focus:border-indigo-500" >
             </div>
-            {% if job_form.name.errors %}
-            <p class="mt-2 text-sm text-red-600">{{ job_form.name.errors }}</p>
+            {% if job_form.schedule_time.errors %}
+            <p class="mt-2 text-sm text-red-600">
+              {{ job_form.schedule_time.errors }}
+            </p>
             {% endif %}
           </div>
 
