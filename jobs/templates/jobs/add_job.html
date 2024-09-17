@@ -1,127 +1,263 @@
 {% extends 'jobs/base.html' %} {% block content %} {% load widget_tweaks %}
 
-<div class="w-full bg-red-300 min-h-screen">
+<div class="w-full min-h-screen">
   <div class="flex justify-center py-8">
-    <div class="w-full md:w-3/5 bg-green-300 p-6 rounded-lg shadow-lg">
+    <div
+      class="w-full md:w-3/5 p-6 rounded-lg border border-2 border-gray-300 shadow-[rgba(0,0,15,0.5)_0px_5px_0px_0px] rounded-lg"
+    >
       <h1 class="font-bold text-4xl text-center mb-6">Add new Job</h1>
 
-      <div class="bg-gray-200 p-4 rounded-md shadow-md">
+      <div class="bg-gray-200 p-4 rounded-md">
         <form method="POST" class="space-y-6">
           {% csrf_token %}
 
-          <!-- Job Name -->
-          <div>
-            <label
-              for="id_name"
-              class="block text-sm font-medium text-gray-700"
-            >
-              Job Name
-            </label>
-            <input
-              type="text"
-              name="{{ job_form.name.name }}"
-              id="{{ job_form.name.id_for_label }}"
-              class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-            {% if job_form.name.errors %}
-            <p class="mt-2 text-sm text-red-700 font-red-700">
-              {{ job_form.name.errors }}
-            </p>
-            {% endif %}
-          </div>
-
-          <!-- Job Description -->
-          <div>
-            <label
-              for="id_description"
-              class="block text-sm font-medium text-gray-700"
-            >
-              Job Description
-            </label>
-            <div>
-              <textarea
-                name="{{ job_form.description.name }}"
-                id="{{ job_form.description.id_for_label }}"
-                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              ></textarea>
-
-              {% if job_form.description.errors %}
-              <p class="mt-2 text-sm text-red-700 font-red-700">
-                {{ job_form.description.errors }}
-              </p>
-              {% endif %}
+          <!-- Job Details Section -->
+          <section>
+            <div class="pb-3">
+              <h1 class="font-bold text-2xl">Job Details</h1>
             </div>
-          </div>
-
-          <!-- Job Schedule Days -->
-          <div>
-            <label
-              for="id_schedule_days"
-              class="block text-sm font-medium text-gray-700"
-            >
-              Select Schedule Days
-            </label>
-            <div class="mt-2 grid grid-cols-2 gap-2">
-              {% for day in job_form.schedule_days.field.choices %}
-              <div class="flex items-center">
-                <input
-                  type="checkbox"
-                  name="{{ job_form.schedule_days.name }}"
-                  id="id_schedule_day_{{ forloop.counter }}"
-                  value="{{ day.0 }}"
-                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                  {%
-                  if
-                  day.0
-                  in
-                  job_form.schedule_days.value
-                  %}checked{%
-                  endif
-                  %}
-                />
+            <div class="pl-4">
+              <!-- Job Name -->
+              <div>
                 <label
-                  for="id_schedule_day_{{ forloop.counter }}"
-                  class="ml-2 block text-sm text-gray-900"
+                  for="{{ job_form.name.id_for_label }}"
+                  class="block text-sm font-medium text-gray-700"
+                  >Job Name</label
                 >
-                  {{ day.1 }}
-                </label>
+                <input
+                  type="text"
+                  name="{{ job_form.name.name }}"
+                  id="{{ job_form.name.id_for_label }}"
+                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                {% if job_form.name.errors %}
+                <p class="text-sm text-red-700">
+                  {{ job_form.name.errors }}
+                </p>
+                {% endif %}
               </div>
-              {% endfor %}
+
+              <!-- Job Description -->
+              <div>
+                <label
+                  for="{{ job_form.description.id_for_label }}"
+                  class="block text-sm font-medium text-gray-700"
+                  >Job Description</label
+                >
+                <textarea
+                  name="{{ job_form.description.name }}"
+                  id="{{ job_form.description.id_for_label }}"
+                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                ></textarea>
+                {% if job_form.description.errors %}
+                <p class="mt-2 text-sm text-red-700">
+                  {{ job_form.description.errors }}
+                </p>
+                {% endif %}
+              </div>
             </div>
-            {% if job_form.schedule_days.errors %}
-            <p class="mt-2 text-sm text-red-600">
-              {{ job_form.schedule_days.errors }}
-            </p>
-            {% endif %}
+          </section>
+
+          <!-- Job Schedule Section -->
+          <section>
+            <div class="pb-3">
+              <h1 class="font-bold text-2xl">Job Schedule Details</h1>
+            </div>
+            <div class="pl-4 flex flex-col gap-10">
+              <!-- Job Schedule Days -->
+              <div>
+                <label
+                  for="id_schedule_days"
+                  class="block text-sm font-medium text-gray-700"
+                  >Select Schedule Days</label
+                >
+                <div class="mt-2 grid grid-cols-2 gap-2">
+                  {% for day in job_form.schedule_days.field.choices %}
+                  <div class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="{{ job_form.schedule_days.name }}"
+                      id="id_schedule_day_{{ forloop.counter }}"
+                      value="{{ day.0 }}"
+                      class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      {%
+                      if
+                      day.0
+                      in
+                      job_form.schedule_days.value
+                      %}checked{%
+                      endif
+                      %}
+                    />
+                    <label
+                      for="id_schedule_day_{{ forloop.counter }}"
+                      class="ml-2 block text-sm text-gray-900"
+                      >{{ day.1 }}</label
+                    >
+                  </div>
+                  {% endfor %}
+                </div>
+                {% if job_form.schedule_days.errors %}
+                <p class="mt-2 text-sm text-red-600">
+                  {{ job_form.schedule_days.errors }}
+                </p>
+                {% endif %}
+              </div>
+
+              <!-- Job Schedule Time -->
+              <div>
+                <label
+                  for="{{ job_form.schedule_time.id_for_label }}"
+                  class="block text-sm font-medium text-gray-700"
+                  >Select Schedule Time</label
+                >
+                <input
+                  type="time"
+                  name="{{ job_form.schedule_time.name }}"
+                  id="{{ job_form.schedule_time.id_for_label }}"
+                  value="{{ job_form.schedule_time.value|default_if_none:'' }}"
+                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                {% if job_form.schedule_time.errors %}
+                <p class="mt-2 text-sm text-red-600">
+                  {{ job_form.schedule_time.errors }}
+                </p>
+                {% endif %}
+              </div>
+            </div>
+          </section>
+
+          <!-- Job Scripts Section -->
+           <section>
+            <div class="pb-3">
+              <h1 class="font-bold text-2xl">Scripts Section</h1>
+              
+            </div>
+            <div class="pl-4" id="script-forms">
+              {{ script_formset.management_form }}
+
+              {% for script_form in script_formset %}
+              <div class="script-form mb-4 border border-1 border-gray-300 p-2 my-4 rounded-md">
+                <h4 class="text-center font-bold text-xl">Script {{ forloop.counter }}</h4>
+                <div>
+                    <label
+                        for="{{ script_form.script_name.id_for_label }}"
+                        class="block text-sm font-medium text-gray-700">
+                        Script Name
+                    </label>
+                    <input
+                        type="text"
+                        name="script_formset-{{ forloop.counter0 }}-script_name"
+                        id="{{ script_form.script_name.id_for_label }}"
+                        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    {% if script_form.script_name.errors %}
+                    <p class="text-sm text-red-700">
+                        {{ script_form.script_name.errors }}
+                    </p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label
+                        for="{{ script_form.table_name.id_for_label }}"
+                        class="block text-sm font-medium text-gray-700">
+                        Table Name
+                    </label>
+                    <input
+                        type="text"
+                        name="script_formset-{{ forloop.counter0 }}-table_name"
+                        id="{{ script_form.table_name.id_for_label }}"
+                        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    {% if script_form.table_name.errors %}
+                    <p class="text-sm text-red-700">
+                        {{ script_form.table_name.errors }}
+                    </p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label
+                        for="{{ script_form.order_exec.id_for_label }}"
+                        class="block text-sm font-medium text-gray-700">
+                        Execution Order
+                    </label>
+                    <input
+                        type="number"
+                        value="{{ forloop.counter }}"
+                        min="1"
+                        name="script_formset-{{ forloop.counter0 }}-order_exec"
+                        id="{{ script_form.order_exec.id_for_label }}"
+                        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    {% if script_form.order_exec.errors %}
+                    <p class="mt-2 text-sm text-red-700">
+                        {{ script_form.order_exec.errors }}
+                    </p>
+                    {% endif %}
+                </div>
+            
+                <div class="flex flex-row gap-4">
+                    <div>
+                        <input
+                            type="checkbox"
+                            name="script_formset-{{ forloop.counter0 }}-import_enabled"
+                            id="{{ script_form.import_enabled.id_for_label }}"
+                            class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                        />
+                        <label
+                            for="{{ script_form.import_enabled.id_for_label }}"
+                            class="ml-2 text-sm text-gray-900">
+                            Import Enabled
+                        </label>
+                    </div>
+                    <div>
+                        <div class="form-check mb-3">
+                            <input
+                                type="checkbox"
+                                class="form-check-input delete-script"
+                                id="delete-script-{{ forloop.counter0 }}"
+                                name="script_formset-{{ forloop.counter0 }}-DELETE"
+                            />
+                            <label
+                                class="form-check-label"
+                                for="delete-script-{{ forloop.counter0 }}">
+                                Delete this script
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- hidden script form fields -->
+                <div>
+                    <textarea
+                        hidden
+                        name="script_formset-{{ forloop.counter0 }}-content"
+                        id="{{ script_form.content.id_for_label }}"
+                        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    ></textarea>
+                    {% if script_form.content.errors %}
+                    <p class="mt-2 text-sm text-red-700">
+                        {{ script_form.content.errors }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            
+              {% endfor %}  
+          </div>
+          <div class="text-center">
+            <button type="button" id="add-script" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Another Script</button>
+
           </div>
 
-          <!-- Job Schedule Time -->
-          <div>
-            <label
-              for="id_schedule_time"
-              class="block text-sm font-medium text-gray-700"
-            >
-              Select Schedule Time
-            </label>
-            <div class="mt-1">
-              <input type="time" name="{{ job_form.schedule_time.name }}" id="{{
-              job_form.schedule_time.id_for_label }}" value="{{
-              job_form.schedule_time.value|default_if_none:"" }}" class="w-full
-              p-2 border border-gray-300 rounded-md shadow-sm
-              focus:ring-indigo-500 focus:border-indigo-500" >
-            </div>
-            {% if job_form.schedule_time.errors %}
-            <p class="mt-2 text-sm text-red-600">
-              {{ job_form.schedule_time.errors }}
-            </p>
-            {% endif %}
-          </div>
+        </section>
+          
+        
 
           <!-- Submit Button -->
           <div class="pt-4">
             <button
               type="submit"
-              class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="w-full py-1 px-2 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none "
             >
               Save Job
             </button>
@@ -132,4 +268,148 @@
   </div>
 </div>
 
+
+
+<!-- Hidden Template for New Script Forms -->
+<div id="empty-form" class="script-form" style="display: none;">
+  <div class="script-form mb-4 border border-1 border-gray-300 p-2 my-4 rounded-md" >
+    <h4 class="text-center font-bold text-xl">Script __scriptNumber__ </h4>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Script Name</label>
+      <input type="text" name="script_formset-__prefix__-script_name" class="w-full p-2 border border-gray-300 rounded-md shadow-sm" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Table Name</label>
+      <input type="text" name="script_formset-__prefix__-table_name" class="w-full p-2 border border-gray-300 rounded-md shadow-sm" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Execution Order</label>
+      <input type="number" name="script_formset-__prefix__-order_exec" id="execution-order" class=" w-full p-2 border border-gray-300 rounded-md shadow-sm" />
+    </div>
+    <div class="flex flex-row gap-4 ">
+      <div>
+        <input type="checkbox" name="script_formset-__prefix__-import_enabled" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
+        <label class="ml-2 text-sm text-gray-900">Import Enabled</label>
+      </div>
+      <div>
+        <input type="checkbox" name="script_formset-__prefix__-DELETE" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 delete-script" id="delete-script-__prefix__" />
+        <label class="ml-2 text-sm text-gray-900">Delete this script</label>
+      </div>
+    </div>
+    <!-- Hidden field for the script content (to be filled by Ace editor) -->
+    <textarea hidden name="script_formset-__prefix__-content" class="hidden-script-content"></textarea>
+
+  </div>
+  
+</div>
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    initializeExistingEditors();
+    setupAddScriptButton();
+    setupFormSubmission();
+    setupDeleteCheckboxes();
+  });
+
+  function setupAddScriptButton() {
+    const addScriptButton = document.getElementById('add-script');
+    const scriptFormsContainer = document.getElementById('script-forms');
+    const totalFormsInput = document.getElementById('id_script_formset-TOTAL_FORMS');
+    const emptyFormTemplate = document.getElementById('empty-form').innerHTML;
+
+    addScriptButton.addEventListener('click', function() {
+    const currentFormCount = parseInt(totalFormsInput.value, 10);
+    const newFormHTML = createNewScriptForm(emptyFormTemplate, currentFormCount);
+    
+    const tempContainer = document.createElement('div');
+    tempContainer.innerHTML = newFormHTML;
+
+    // Access the new form element and update the order_exec value
+    const newFormDiv = tempContainer.querySelector('.script-form');
+    const orderExecInput = newFormDiv.querySelector('input[name*="order_exec"]');
+    
+    if (orderExecInput) {
+      orderExecInput.value = currentFormCount + 1;
+    }
+    scriptFormsContainer.appendChild(newFormDiv);
+    totalFormsInput.value = currentFormCount + 1;
+
+    // Initialize the Ace editor or any other elements as necessary
+    initializeAceEditorForNewForm(newFormDiv);
+    setupDeleteCheckboxes();
+  });
+
+  }
+
+  function createNewScriptForm(template, formIndex) {
+    return template
+      .replace(/__scriptNumber__/g, formIndex + 1)
+      .replace(/__prefix__/g, formIndex);
+  }
+
+  function initializeExistingEditors() {
+    const scriptFormsContainer = document.getElementById('script-forms');
+    const textareas = scriptFormsContainer.querySelectorAll('.hidden-script-content');
+    textareas.forEach((textarea, index) => {
+      initializeAceEditor(textarea, index);
+    });
+  }
+
+  function initializeAceEditor(textarea, index) {
+    const editorDiv = document.createElement('div');
+    editorDiv.id = 'ace-editor-' + index;
+    textarea.parentNode.insertBefore(editorDiv, textarea);
+    const editor = ace.edit(editorDiv.id);
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/javascript");
+    editor.setFontSize(14);
+    editor.session.on('change', function() {
+      textarea.value = editor.getValue();
+    });
+  }
+
+  function initializeAceEditorForNewForm(newFormDiv) {
+    const textareas = newFormDiv.querySelectorAll('.hidden-script-content');
+    textareas.forEach((textarea, index) => {
+      initializeAceEditor(textarea, index);
+    });
+  }
+
+  function setupDeleteCheckboxes() {
+    const scriptFormsContainer = document.getElementById('script-forms');
+    
+    scriptFormsContainer.addEventListener('change', function(event) {
+      if (event.target && event.target.classList.contains('delete-script')) {
+        const checkbox = event.target;
+        const scriptForm = checkbox.closest('.script-form');
+        if (checkbox.checked) {
+          scriptForm.style.opacity = 0.3;
+        } else {
+          scriptForm.style.opacity = 1;
+        }
+      }
+    });
+  }
+
+  function setupFormSubmission() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function() {
+      const textareas = document.querySelectorAll('.hidden-script-content');
+      textareas.forEach(textarea => {
+        const editor = ace.edit(textarea.previousElementSibling.id);
+        textarea.value = editor.getValue();
+      });
+    });
+  }
+</script>
+
+
+{{ script_formset.total_form_count }}
 {% endblock %}
+
+
