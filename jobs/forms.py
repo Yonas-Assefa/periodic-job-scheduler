@@ -6,6 +6,10 @@ class JobForm(forms.ModelForm):
         choices=Job.WEEKDAYS,
         widget=forms.CheckboxSelectMultiple,  
     )
+    def clean(self):
+        cleaned_data = super().clean()
+        # Additional validation if needed
+        return cleaned_data
 
     class Meta:
         model = Job
@@ -16,6 +20,12 @@ class JobForm(forms.ModelForm):
 
 
 class ScriptForm(forms.ModelForm):
+    def clean_content(self):
+        content = self.cleaned_data.get('content')
+        if not content:
+            raise forms.ValidationError("Script content cannot be empty.")
+        return content
+    
     class Meta:
         model = Script
         fields = ['script_name', 'content', 'table_name', 'order_exec', 'import_enabled']

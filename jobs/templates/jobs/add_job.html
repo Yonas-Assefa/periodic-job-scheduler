@@ -32,7 +32,7 @@
                 />
                 {% if job_form.name.errors %}
                 <p class="text-sm text-red-700">
-                  {{ job_form.name.errors }}
+                 <h5 class="text-red-700 text-xs ">{{ job_form.name.errors }}</h5> 
                 </p>
                 {% endif %}
               </div>
@@ -50,8 +50,9 @@
                   class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 ></textarea>
                 {% if job_form.description.errors %}
-                <p class="mt-2 text-sm text-red-700">
-                  {{ job_form.description.errors }}
+                <p class="text-sm text-red-700">
+                  
+                  <h5 class="text-red-700 text-xs ">{{ job_form.description.errors }}</h5>
                 </p>
                 {% endif %}
               </div>
@@ -98,8 +99,10 @@
                   {% endfor %}
                 </div>
                 {% if job_form.schedule_days.errors %}
-                <p class="mt-2 text-sm text-red-600">
-                  {{ job_form.schedule_days.errors }}
+                <p class="text-red-600">
+                  <h5 class="text-red-700 text-xs "> 
+                    {{ job_form.schedule_days.errors }}
+                  </h5>
                 </p>
                 {% endif %}
               </div>
@@ -119,8 +122,10 @@
                   class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 />
                 {% if job_form.schedule_time.errors %}
-                <p class="mt-2 text-sm text-red-600">
-                  {{ job_form.schedule_time.errors }}
+                <p class="text-red-600">
+                  <h5 class="text-red-700 text-xs "> 
+                    {{ job_form.schedule_time.errors }}
+                  </h5>                                
                 </p>
                 {% endif %}
               </div>
@@ -152,8 +157,9 @@
                         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     />
                     {% if script_form.script_name.errors %}
-                    <p class="text-sm text-red-700">
-                        {{ script_form.script_name.errors }}
+                    <p class="text-red-700">
+                        
+                        <h5 class="text-red-700 text-xs ">{{ script_form.script_name.errors }}</h5>
                     </p>
                     {% endif %}
                 </div>
@@ -170,8 +176,9 @@
                         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     />
                     {% if script_form.table_name.errors %}
-                    <p class="text-sm text-red-700">
-                        {{ script_form.table_name.errors }}
+                    <p class="text-red-700">
+                      <h5 class="text-red-700 text-xs ">{{ script_form.table_name.errors }}</h5>
+                        
                     </p>
                     {% endif %}
                 </div>
@@ -190,8 +197,9 @@
                         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     />
                     {% if script_form.order_exec.errors %}
-                    <p class="mt-2 text-sm text-red-700">
-                        {{ script_form.order_exec.errors }}
+                    <p class="text-sm text-red-700">
+                      <h5 class="text-red-700 text-xs ">{{ script_form.order_exec.errors }}</h5>
+                        
                     </p>
                     {% endif %}
                 </div>
@@ -232,14 +240,17 @@
                         hidden
                         name="script_formset-{{ forloop.counter0 }}-content"
                         id="{{ script_form.content.id_for_label }}"
-                        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        class="hidden-script-content w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     ></textarea>
                     {% if script_form.content.errors %}
-                    <p class="mt-2 text-sm text-red-700">
-                        {{ script_form.content.errors }}
+                    <p class="text-red-700">
+                        
+                      <h5 class="text-red-700 text-xs ">{{ script_form.content.errors }}</h5>
+
                     </p>
                     {% endif %}
                 </div>
+               
             </div>
             
               {% endfor %}  
@@ -297,7 +308,12 @@
       </div>
     </div>
     <!-- Hidden field for the script content (to be filled by Ace editor) -->
+     <div>
     <textarea hidden name="script_formset-__prefix__-content" class="hidden-script-content"></textarea>
+
+
+     </div>
+    
 
   </div>
   
@@ -338,9 +354,9 @@
     }
     scriptFormsContainer.appendChild(newFormDiv);
     totalFormsInput.value = currentFormCount + 1;
+    const contentTextArea = newFormDiv.querySelector('textarea[name*="content"]');
 
-    // Initialize the Ace editor or any other elements as necessary
-    initializeAceEditorForNewForm(newFormDiv);
+    initializeAceEditor(contentTextArea, currentFormCount + 1);
     setupDeleteCheckboxes();
   });
 
@@ -360,26 +376,44 @@
     });
   }
 
-  function initializeAceEditor(textarea, index) {
-    const editorDiv = document.createElement('div');
-    editorDiv.id = 'ace-editor-' + index;
-    textarea.parentNode.insertBefore(editorDiv, textarea);
-    const editor = ace.edit(editorDiv.id);
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/javascript");
-    editor.setFontSize(14);
-    editor.session.on('change', function() {
-      textarea.value = editor.getValue();
-    });
-  }
-
+  
   function initializeAceEditorForNewForm(newFormDiv) {
     const textareas = newFormDiv.querySelectorAll('.hidden-script-content');
     textareas.forEach((textarea, index) => {
       initializeAceEditor(textarea, index);
     });
   }
+  
+  function initializeAceEditor(textarea, index) {
+    console.log(textarea, index)
 
+    const editorDiv = document.createElement('div');
+    editorDiv.id = 'ace-editor-' + index;
+    editorDiv.style.height = '300px'; // Set the height to ensure the editor is visible
+    editorDiv.style.width = '100%'; // Adjust the width as needed
+    // Insert the editor div before the textarea
+    if (textarea) {
+        textarea.parentNode.insertBefore(editorDiv, textarea);
+        textarea.style.display = 'none'; // Hide the original textarea if needed
+      } else {
+        console.error('Textarea element not found');
+        return;
+      }
+
+   // Initialize Ace Editor
+   const editor = ace.edit(editorDiv.id);
+      editor.setTheme("ace/theme/cloud");
+      editor.session.setMode("ace/mode/python");
+      editor.setFontSize(14);
+
+      editor.session.on('change', function() {
+        textarea.value = editor.getValue();
+      });
+
+      console.log('Ace Editor initialized on', editorDiv.id);
+
+
+  }
   function setupDeleteCheckboxes() {
     const scriptFormsContainer = document.getElementById('script-forms');
     
@@ -401,8 +435,11 @@
     form.addEventListener('submit', function() {
       const textareas = document.querySelectorAll('.hidden-script-content');
       textareas.forEach(textarea => {
-        const editor = ace.edit(textarea.previousElementSibling.id);
-        textarea.value = editor.getValue();
+        const editorDiv = document.getElementById('ace-editor-' + textarea.dataset.index);
+        if (editorDiv) {
+          const editor = ace.edit(editorDiv.id);
+          textarea.value = editor.getValue();
+        }
       });
     });
   }

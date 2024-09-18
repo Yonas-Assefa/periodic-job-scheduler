@@ -24,7 +24,7 @@ class Job(models.Model):
 class Script(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='scripts')
     script_name = models.CharField(max_length=255)
-    content = models.TextField(blank=True, null=True)  # This will store the code
+    content = models.TextField(blank=False)  # This will store the code
     table_name = models.CharField(max_length=255)
     order_exec = models.PositiveIntegerField()
     import_enabled = models.BooleanField(default=False)
