@@ -15,6 +15,7 @@ class Job(models.Model):
     description = models.TextField()
     schedule_days = models.JSONField()  
     schedule_time = models.TimeField()  
+    created_at = models.DateTimeField(auto_now_add=True) 
 
     def __str__(self):
         return self.name
@@ -28,6 +29,7 @@ class Script(models.Model):
     table_name = models.CharField(max_length=255)
     order_exec = models.PositiveIntegerField()
     import_enabled = models.BooleanField(default=False)
+    delete_script = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['order_exec']
@@ -45,7 +47,7 @@ class Script(models.Model):
                 script.order_exec = expected_order
                 script.save(update_fields=['order_exec'])
                 changes_made = True
-        expected_order += 1
+            expected_order += 1
         return changes_made
     
 

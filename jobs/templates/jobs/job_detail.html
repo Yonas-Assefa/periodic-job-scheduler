@@ -1,0 +1,84 @@
+{% extends 'jobs/base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+
+        <!-- Job Details Section -->
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">{{ job.name }}</h1>
+            <p class="text-gray-700 text-lg">{{ job.description }}</p>
+
+            <div class="mt-4">
+                <h3 class="text-xl font-semibold">Job Information</h3>
+                <ul class="list-disc list-inside">
+                    <li><strong>Scheduled Days:</strong> {% for sc_day in job.schedule_days %} <span class="capitalize">{{sc_day}}</span> {% endfor %}</li>
+                    <li><strong>Scheduled Time:</strong> {{ job.schedule_time }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Associated Scripts Section -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h3 class="text-2xl font-semibold mb-4">Associated Scripts</h3>
+
+            <div class="accordion" id="scriptAccordion">
+                {% for script in scripts %}
+                    <div class="accordion-item mb-4">
+                        <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" 
+                                    aria-controls="collapse{{ forloop.counter }}">
+                                <strong>{{ script.script_name }}</strong> - Table: {{ script.table_name }} (Order: {{ script.order_exec }})
+                            </button>
+                        </h2>
+                        <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" 
+                             aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#scriptAccordion">
+                            <div class="accordion-body">
+                                
+                                <!-- Ace Editor for Script Content -->
+                                <div id="editor{{ forloop.counter }}" class="ace-editor h-64 text-black"></div>
+                                
+                                <p class="text-muted mt-2">Last Updated: {{ script.updated_at }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <a href="{% url 'home' %}" class="btn btn-secondary mt-4">Back to Job List</a>
+        </div>
+    </div>
+
+    <!-- Ace Editor Initialization -->
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            const newscripts = []
+               
+
+
+            `{{ scripts }}`.forEach(script => {
+                const newSc = {
+                    id: "editor{{ forloop.counter }}",
+                    content: `{{ script.content|escapejs }}`,
+                    language: "{{ script.language|default:'text' }}"
+                }
+                newscripts.push(newSc)
+                
+            });
+
+            newscripts.forEach(script => {
+                const editor = ace.edit(script.id);
+                editor.setTheme("ace/theme/monokai");
+                editor.session.setMode(`ace/mode/python`);
+                editor.setValue(script.content);
+                editor.setReadOnly(true); // Set to true for read-only mode
+            });
+        });
+    </script>
+
+    <!-- Ensure Ace Editor is loaded -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"
+            integrity="sha512-rORxfZIwIMvSXR5dFoETeCk4ZVxNnEyD/CrYvljW5Tb5vAwZrK5brLrfztCKfZ5rYz7bjjwwxRLxFkHKQ0ZtTQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% endblock %}

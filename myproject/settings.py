@@ -53,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+STATICFILES_DIRS = [# This is optional for additional global static files
+]
 
 ROOT_URLCONF = 'myproject.urls'
 

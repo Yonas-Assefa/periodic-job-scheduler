@@ -28,7 +28,7 @@ class ScriptForm(forms.ModelForm):
     
     class Meta:
         model = Script
-        fields = ['script_name', 'content', 'table_name', 'order_exec', 'import_enabled']
+        fields = ['script_name', 'content', 'table_name', 'order_exec', 'import_enabled', 'delete_script']
         widgets = {
             'content': forms.HiddenInput(),  # Use HiddenInput to hide the text area and include the Ace Editor content
             'order_exec': forms.NumberInput(attrs={'class': 'form-control', 'style': 'max-width: 80px;'}),

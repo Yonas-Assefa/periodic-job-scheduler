@@ -2,3 +2,4 @@ Django>=4.2,<5
 psycopg==3.1.17
 django_compressor==4.5.1
 django-widget-tweaks==1.4.12
+

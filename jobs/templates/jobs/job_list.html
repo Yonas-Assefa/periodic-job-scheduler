@@ -1,0 +1,38 @@
+{% extends 'jobs/base.html' %}
+
+{% block content %}
+
+<main class="flex-grow p-4">
+    <div class="row">
+        <!-- 'Add New Job' Button Above the Job Listings -->
+        <div class="col-md-12 mb-4 text-end">
+            <a href="{% url 'add_job' %}" class="btn btn-success">Add New Job</a>
+        </div>
+
+        {% if jobs_with_scripts|length == 0 %}
+            <div class="col-md-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    <h5 class="alert-heading">No Jobs Found Yet!</h5>
+                    <p>It looks like there are no jobs available at the moment. Please check back later or add a new job.</p>
+                </div>
+            </div>
+        {% else %}
+            {% for job_with_scripts in jobs_with_scripts %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ job_with_scripts.job.name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ job_with_scripts.job.description|truncatewords:20 }}</p>
+                            <p class="card-text"><strong>Number of Scripts:</strong> {{ job_with_scripts.scripts|length }}</p>
+                            <a href="{% url 'job_detail' job_with_scripts.job.id %}" class="btn btn-primary">See More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</main>
+
+{% endblock %}
